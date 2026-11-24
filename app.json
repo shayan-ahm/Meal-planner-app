@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Forkcast",
+    "slug": "meal-planner-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app.forkcast.mealplanner"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#15803D",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "app.forkcast.mealplanner"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-image",
+      "expo-font",
+      "expo-audio"
+    ],
+    "scheme": "forkcast",
+    "splash": {
+      "backgroundColor": "#FFFFFF",
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain"
+    }
+  }
+}
