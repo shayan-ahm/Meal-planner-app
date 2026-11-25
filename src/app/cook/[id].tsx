@@ -178,7 +178,7 @@ const s = StyleSheet.create({
   timerBtnText: { fontFamily: F.semibold, color: C.leaf, fontSize: 15 },
   tip: { backgroundColor: C.leafSoft, borderRadius: 12, padding: 12 },
   ing: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.line },
-  box: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, borderColor: '#B8C8D6', alignItems: 'center', justifyContent: 'center' },
+  box: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, borderColor: '#B7C4BC', alignItems: 'center', justifyContent: 'center' },
   boxOn: { backgroundColor: C.leaf, borderColor: C.leaf },
   tick: { color: '#fff', fontSize: 14, fontFamily: F.semibold, lineHeight: 16 },
   star: { fontSize: 40, color: C.line },
