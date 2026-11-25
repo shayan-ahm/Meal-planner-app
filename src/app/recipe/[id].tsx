@@ -60,7 +60,7 @@ export default function RecipeScreen() {
             ))}
           </View>
         ) : <Muted>Nutrition isn’t available for this recipe yet.</Muted>}
-        <Muted style={{ fontSize: 11 }}>Estimates from typical ingredient values.</Muted>
+        <Muted style={{ fontSize: 11 }}>Estimates from typical ingredient values, not medical or diet advice.</Muted>
 
         <View style={s.head}>
           <H3 style={{ flex: 1 }}>Ingredients</H3>
