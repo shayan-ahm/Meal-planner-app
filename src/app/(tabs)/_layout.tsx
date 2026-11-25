@@ -7,6 +7,7 @@ import { C, F } from '../../ui/theme';
 export default function TabsLayout() {
   const { state } = useStore();
   const toGet = listModel(state).toGet;
+  const toCook = state.plan.filter((p) => !p.cooked).length;
   return (
     <Tabs
       screenOptions={{
@@ -20,7 +21,13 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: 'My meals', tabBarIcon: ({ color, size }) => <Ionicons name="restaurant-outline" color={color as string} size={size} /> }}
+        options={{
+          title: 'My meals',
+          // Shows how many chosen meals are still to cook, like the grocery count.
+          tabBarBadge: toCook || undefined,
+          tabBarBadgeStyle: { backgroundColor: C.leaf, color: C.leafInk, fontSize: 11 },
+          tabBarIcon: ({ color, size }) => <Ionicons name={toCook ? 'restaurant' : 'restaurant-outline'} color={color as string} size={size} />,
+        }}
       />
       <Tabs.Screen
         name="recipes"
