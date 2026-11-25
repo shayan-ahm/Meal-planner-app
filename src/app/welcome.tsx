@@ -85,7 +85,7 @@ export default function Welcome() {
 const s = StyleSheet.create({
   wrap: { flex: 1, backgroundColor: C.bg, paddingHorizontal: 20 },
   top: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { fontFamily: F.displayBold, fontSize: 24, color: C.ink, letterSpacing: -0.4 },
+  brand: { fontFamily: F.displayBold, fontSize: 28, color: C.ink, letterSpacing: -0.4 },
   skip: { fontFamily: F.semibold, fontSize: 15, color: C.muted },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 14, paddingHorizontal: 8 },
   kicker: { fontFamily: F.semibold, fontSize: 12, letterSpacing: 1, textTransform: 'uppercase', color: C.leaf },

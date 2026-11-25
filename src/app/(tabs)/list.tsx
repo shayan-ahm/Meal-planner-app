@@ -1,9 +1,10 @@
 import * as Clipboard from 'expo-clipboard';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useState } from 'react';
 import { Alert, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from 'react-native';
 import { listAsText, listModel, qtyText, subsFor, type ListRow } from '../../lib/logic';
 import { actions, useStore } from '../../lib/store';
+import { reshuffleRecipes } from '../../lib/shuffle';
 import { Button, Chip, H2, Label, Muted, tap } from '../../ui/kit';
 import { TopBar } from '../../ui/Screen';
 import { C, F } from '../../ui/theme';
@@ -16,6 +17,7 @@ function Check({ on }: { on: boolean }) {
 const SHOW_LEFTOVER_TIP = false;
 
 export default function GroceryList() {
+  useFocusEffect(reshuffleRecipes);
   const { state, update } = useStore();
   const [extra, setExtra] = useState('');
   const m = listModel(state);

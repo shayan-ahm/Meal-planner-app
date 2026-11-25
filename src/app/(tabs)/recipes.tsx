@@ -1,8 +1,9 @@
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { CATEGORIES, CUISINES, RECIPES } from '../../data/recipes';
 import { fits, info, matchCategory, prefRank, searchText } from '../../lib/logic';
+import { recipeSeed } from '../../lib/shuffle';
 import { useStore } from '../../lib/store';
 import { Chip, H2, Muted, tap } from '../../ui/kit';
 import { RecipeCard } from '../../ui/RecipeCard';
@@ -14,7 +15,10 @@ export default function Recipes() {
   const [q, setQ] = useState('');
   const params = useLocalSearchParams<{ cat?: string }>();
   const [cat, setCat] = useState(params.cat || 'all');
-  useFocusEffect(useCallback(() => { if (params.cat) setCat(params.cat); }, [params.cat]));
+  // A shortcut like "My favourites" on My meals opens this tab with ?cat=fav. Apply it once.
+  useFocusEffect(useCallback(() => {
+    if (params.cat) { setCat(params.cat); router.setParams({ cat: undefined }); }
+  }, [params.cat]));
   const [cui, setCui] = useState('');
   const [all, setAll] = useState(false);
   const P = state.prefs;
@@ -22,8 +26,8 @@ export default function Recipes() {
   // "My favourites" goes first once there are any.
   const cats = hasFavs ? [...CATEGORIES.filter(([k]) => k === 'fav'), ...CATEGORIES.filter(([k]) => k !== 'fav')] : CATEGORIES.filter(([k]) => k !== 'fav');
   // New random order every time the Recipes tab opens, so people see variety.
-  const [seed, setSeed] = useState(() => Math.random());
-  useFocusEffect(useCallback(() => { setSeed(Math.random()); }, []));
+  const [seed, setSeed] = useState(recipeSeed);
+  useFocusEffect(useCallback(() => { setSeed(recipeSeed()); }, []));
   const hidden = RECIPES.filter((r) => !fits(r, P)).length;
 
   const list = useMemo(() => {

@@ -117,6 +117,5 @@ export const actions = {
   deleteSaved: (id: string) => (s: AppState): AppState => ({ ...s, saved: s.saved.filter((x) => x.id !== id) }),
 };
 
-export const starsOf = (s: AppState) => (id: string) => s.reviews[id]?.stars || 0;
 export const isFav = (s: AppState, id: string) => s.favs.includes(id);
 export const inPlan = (s: AppState, r: Recipe | string) => s.plan.some((p) => p.r === (typeof r === 'string' ? r : r.id));

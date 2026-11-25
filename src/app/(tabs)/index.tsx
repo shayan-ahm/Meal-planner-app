@@ -1,14 +1,16 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useEffect } from 'react';
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { info, pickForMe, recipe, shoppingCount } from '../../lib/logic';
 import { actions, useStore } from '../../lib/store';
+import { reshuffleRecipes } from '../../lib/shuffle';
 import { Button, H2, Muted, Photo, Stepper, servingsLabel, tap } from '../../ui/kit';
 import { TopBar } from '../../ui/Screen';
 import { C, F, shadow } from '../../ui/theme';
 
 export default function MyMeals() {
+  useFocusEffect(reshuffleRecipes);
   const { state, update } = useStore();
   const plan = state.plan.filter((e) => recipe(e.r));
   const items = shoppingCount(plan);

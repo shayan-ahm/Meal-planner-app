@@ -13,11 +13,11 @@ export function TopBar({ children }: { children?: ReactNode }) {
       <View style={s.row}>
         <Text style={s.brand} accessibilityRole="header">Fork<Text style={{ color: C.leaf }}>cast</Text></Text>
         <View style={{ flex: 1 }} />
-        <Pressable accessibilityRole="button" accessibilityLabel="How it works" onPress={() => router.push('/welcome')} style={[s.help, { marginRight: 8 }]}>
-          <Text style={s.helpText}>? How it works</Text>
+        <Pressable accessibilityRole="button" accessibilityLabel="How it works" onPress={() => router.push('/welcome')} style={[s.help, { marginRight: 6 }]}>
+          <Text style={s.helpText}>How it works</Text>
         </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Preferences" onPress={() => router.push('/preferences')} style={s.prefs}>
-          <Ionicons name="options" size={16} color={C.leafInk} />
+          <Ionicons name="options" size={15} color={C.leafInk} />
           <Text style={s.prefsText}>Preferences</Text>
         </Pressable>
       </View>
@@ -29,9 +29,9 @@ export function TopBar({ children }: { children?: ReactNode }) {
 const s = StyleSheet.create({
   top: { backgroundColor: C.bg, paddingHorizontal: 16, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: C.line },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { fontFamily: F.displayBold, fontSize: 24, color: C.ink, letterSpacing: -0.4 },
-  help: { borderWidth: 1, borderColor: C.line, backgroundColor: C.surface, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 11 },
-  helpText: { fontFamily: F.medium, fontSize: 13, color: C.ink },
-  prefs: { flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 12 },
-  prefsText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
+  brand: { fontFamily: F.displayBold, fontSize: 27, color: C.ink, letterSpacing: -0.4 },
+  help: { borderWidth: 1, borderColor: C.line, backgroundColor: C.surface, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 10 },
+  helpText: { fontFamily: F.medium, fontSize: 12.5, color: C.ink },
+  prefs: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 10 },
+  prefsText: { fontFamily: F.semibold, fontSize: 12.5, color: C.leafInk },
 });

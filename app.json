@@ -27,14 +27,19 @@
       "expo-router",
       "expo-image",
       "expo-font",
-      "expo-audio"
+      "expo-audio",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
     ],
     "scheme": "forkcast",
-    "splash": {
-      "backgroundColor": "#FFFFFF",
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain"
-    },
     "owner": "shayan.ahm",
     "extra": {
       "eas": {
