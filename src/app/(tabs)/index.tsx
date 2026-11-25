@@ -78,7 +78,17 @@ export default function MyMeals() {
         })}
 
         <Button title="+ Add meals" kind={plan.length ? 'ghost' : 'primary'} big={!plan.length} onPress={() => router.navigate('/recipes')} />
-        {plan.length < 3 && <Button title="Not sure? Pick 3 for me" kind="link" onPress={() => update((st) => actions.setPlan(pickForMe(st, 3))(st))} />}
+        <View style={s.pick}>
+          <Pressable
+            accessibilityRole="button"
+            style={{ flex: 1 }}
+            onPress={() => { tap(); update((st) => actions.setPlan(pickForMe(st, st.pickN))(st)); }}
+          >
+            <Text style={s.pickTitle}>{plan.length ? 'Add' : 'Not sure? Pick'} {state.pickN} {state.pickN === 1 ? 'meal' : 'meals'} for me</Text>
+            <Muted>A mix of different meals that share ingredients</Muted>
+          </Pressable>
+          <Stepper value={state.pickN} label={String(state.pickN)} min={1} max={7} compact onChange={(v) => update((st) => ({ ...st, pickN: v }))} />
+        </View>
         {plan.length > 0 && <Button title={`See grocery list (${items} items)`} big onPress={() => router.navigate('/list')} />}
         {macros.length > 0 && <Muted style={{ textAlign: 'center' }}>Average per serving: {avg('kcal')} kcal · {avg('prot')}g protein</Muted>}
 
@@ -103,5 +113,7 @@ const s = StyleSheet.create({
   x: { fontSize: 24, color: C.muted, paddingHorizontal: 4 },
   cook: { backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 16 },
   cookText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
+  pick: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.leafSoft, borderRadius: 14, paddingVertical: 10, paddingHorizontal: 12 },
+  pickTitle: { fontFamily: F.semibold, fontSize: 15, color: C.leaf },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 8 },
 });

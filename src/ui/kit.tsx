@@ -60,13 +60,13 @@ export function Chip({ label, on, onPress, style }: { label: string; on?: boolea
   );
 }
 
-export function Stepper({ value, label, onChange, min = 1, max = 12 }: { value: number; label: string; onChange: (v: number) => void; min?: number; max?: number }) {
+export function Stepper({ value, label, onChange, min = 1, max = 12, compact }: { value: number; label: string; onChange: (v: number) => void; min?: number; max?: number; compact?: boolean }) {
   return (
     <View style={s.stepper}>
       <Pressable accessibilityLabel="Fewer" hitSlop={6} style={s.stepBtn} onPress={() => { tap(); onChange(Math.max(min, value - 1)); }}>
         <Text style={s.stepSign}>−</Text>
       </Pressable>
-      <Text style={s.stepText}>{label}</Text>
+      <Text style={[s.stepText, compact && { minWidth: 26 }]}>{label}</Text>
       <Pressable accessibilityLabel="More" hitSlop={6} style={s.stepBtn} onPress={() => { tap(); onChange(Math.min(max, value + 1)); }}>
         <Text style={s.stepSign}>+</Text>
       </Pressable>
