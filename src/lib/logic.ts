@@ -78,9 +78,11 @@ export function info(r: Recipe): Info {
   const macro = known >= Math.max(1, r.i.length * 0.6)
     ? { kcal: Math.round(nu[0] / 10) * 10, prot: Math.round(nu[1]), carb: Math.round(nu[2]), fat: Math.round(nu[3]) }
     : null;
-  const hp = !!macro && macro.prot >= 30;
-  const loC = !!macro && macro.carb <= 25;
-  const loF = !!macro && macro.fat <= 15;
+  // Labels use share of calories so a small snack can't pass as "high protein" or "low carb".
+  const share = (g: number, kcalPerG: number) => (macro && macro.kcal ? (g * kcalPerG) / macro.kcal : 0);
+  const hp = !!macro && macro.prot >= 25 && share(macro.prot, 4) >= 0.2;
+  const loC = !!macro && macro.carb <= 30 && share(macro.carb, 4) <= 0.26;
+  const loF = !!macro && share(macro.fat, 9) <= 0.3;
   const loCal = !!macro && macro.kcal <= 500;
   if (hp) labels.push('High protein');
   if (loC) labels.push('Low carb');

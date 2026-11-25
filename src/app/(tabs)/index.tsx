@@ -1,4 +1,6 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
+import { useEffect } from 'react';
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { info, pickForMe, recipe, shoppingCount } from '../../lib/logic';
 import { actions, useStore } from '../../lib/store';
@@ -11,6 +13,9 @@ export default function MyMeals() {
   const plan = state.plan.filter((e) => recipe(e.r));
   const items = shoppingCount(plan);
   const macros = plan.map((e) => info(recipe(e.r)!).macro).filter(Boolean) as { kcal: number; prot: number }[];
+  // First launch: show the short guide once.
+  useEffect(() => { if (!state.intro) router.push('/welcome'); }, [state.intro]);
+  const pick = () => { tap(); update((st) => actions.setPlan(pickForMe(st, st.pickN))(st)); };
   const avg = (k: 'kcal' | 'prot') => Math.round(macros.reduce((a, m) => a + m[k], 0) / Math.max(1, macros.length));
 
   const savePlan = () => {
@@ -44,8 +49,21 @@ export default function MyMeals() {
 
         {!plan.length && (
           <View style={s.empty}>
-            <Text style={s.emptyTitle}>No meals yet</Text>
-            <Muted style={{ textAlign: 'center' }}>Pick the meals you want to cook. We’ll build one grocery list for all of them.</Muted>
+            <Text style={s.emptyTitle}>How it works</Text>
+            {[
+              ['restaurant-outline', 'Pick a few meals', 'Tap the green button below, or browse Recipes.'],
+              ['cart-outline', 'Get one grocery list', 'Everything you need, in one list.'],
+              ['flame-outline', 'Cook step by step', 'Big steps and timers. Tap Exit any time.'],
+            ].map(([icon, t, d], k) => (
+              <View key={t} style={s.how}>
+                <View style={s.howNum}><Text style={s.howNumText}>{k + 1}</Text></View>
+                <View style={{ flex: 1 }}>
+                  <Text style={s.howTitle}>{t}</Text>
+                  <Muted>{d}</Muted>
+                </View>
+                <Ionicons name={icon as 'cart-outline'} size={22} color={C.leaf} />
+              </View>
+            ))}
           </View>
         )}
 
@@ -77,18 +95,20 @@ export default function MyMeals() {
           );
         })}
 
-        <Button title="+ Add meals" kind={plan.length ? 'ghost' : 'primary'} big={!plan.length} onPress={() => router.navigate('/recipes')} />
-        <View style={s.pick}>
+        <View style={s.pickRow}>
           <Pressable
             accessibilityRole="button"
-            style={{ flex: 1 }}
-            onPress={() => { tap(); update((st) => actions.setPlan(pickForMe(st, st.pickN))(st)); }}
+            accessibilityLabel={`Pick ${state.pickN} meals for me`}
+            onPress={pick}
+            style={({ pressed }) => [s.pickBtn, plan.length > 0 && s.pickBtnSoft, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
           >
-            <Text style={s.pickTitle}>{plan.length ? 'Add' : 'Not sure? Pick'} {state.pickN} {state.pickN === 1 ? 'meal' : 'meals'} for me</Text>
-            <Muted>A mix of different meals that share ingredients</Muted>
+            <Ionicons name="shuffle" size={22} color={plan.length ? C.leaf : C.leafInk} />
+            <Text style={[s.pickBtnText, plan.length > 0 && { color: C.leaf }]}>{plan.length ? `Pick ${state.pickN} more for me` : `Pick ${state.pickN} meals for me`}</Text>
           </Pressable>
           <Stepper value={state.pickN} label={String(state.pickN)} min={1} max={7} compact onChange={(v) => update((st) => ({ ...st, pickN: v }))} />
         </View>
+        <Muted style={{ textAlign: 'center', marginTop: -4 }}>A varied mix that shares ingredients. Use − and + to choose how many.</Muted>
+        <Button title="Browse recipes" kind="ghost" onPress={() => router.navigate('/recipes')} />
         {plan.length > 0 && <Button title={`See grocery list (${items} items)`} big onPress={() => router.navigate('/list')} />}
         {macros.length > 0 && <Muted style={{ textAlign: 'center' }}>Average per serving: {avg('kcal')} kcal · {avg('prot')}g protein</Muted>}
 
@@ -96,6 +116,7 @@ export default function MyMeals() {
           {plan.length > 0 && <Button title="Save this plan" kind="link" onPress={savePlan} />}
           {state.saved.length > 0 && <Button title={`Saved plans (${state.saved.length})`} kind="link" onPress={() => router.push('/saved')} />}
           {plan.length > 0 && <Button title="Clear all meals" kind="link" onPress={clearAll} />}
+          <Button title="How it works" kind="link" onPress={() => router.push('/welcome')} />
         </View>
       </ScrollView>
     </View>
@@ -104,8 +125,16 @@ export default function MyMeals() {
 
 const s = StyleSheet.create({
   main: { padding: 16, gap: 12, paddingBottom: 40 },
-  empty: { alignItems: 'center', gap: 4, paddingVertical: 28, paddingHorizontal: 16, borderWidth: 1.5, borderStyle: 'dashed', borderColor: C.line, borderRadius: 14 },
-  emptyTitle: { fontFamily: F.semibold, fontSize: 15, color: C.ink },
+  empty: { gap: 12, padding: 16, backgroundColor: C.surface, borderRadius: 14 },
+  emptyTitle: { fontFamily: F.display, fontSize: 17, color: C.ink },
+  how: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  howNum: { width: 28, height: 28, borderRadius: 14, backgroundColor: C.leaf, alignItems: 'center', justifyContent: 'center' },
+  howNumText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
+  howTitle: { fontFamily: F.semibold, fontSize: 15, color: C.ink },
+  pickRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  pickBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 16, paddingHorizontal: 14, ...shadow },
+  pickBtnSoft: { backgroundColor: C.leafSoft, borderWidth: 1.5, borderColor: C.leaf, shadowOpacity: 0, elevation: 0 },
+  pickBtnText: { fontFamily: F.semibold, fontSize: 16, color: C.leafInk },
   slot: { backgroundColor: C.surface, borderRadius: 14, padding: 12, gap: 10, ...shadow },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   thumb: { width: 64, height: 64, borderRadius: 12 },
@@ -113,7 +142,5 @@ const s = StyleSheet.create({
   x: { fontSize: 24, color: C.muted, paddingHorizontal: 4 },
   cook: { backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 16 },
   cookText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
-  pick: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: C.leafSoft, borderRadius: 14, paddingVertical: 10, paddingHorizontal: 12 },
-  pickTitle: { fontFamily: F.semibold, fontSize: 15, color: C.leaf },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 8 },
 });

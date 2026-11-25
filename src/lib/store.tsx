@@ -8,7 +8,7 @@ import type { AppState, PlanEntry, Recipe } from './types';
 const KEY = 'forkcast.state.v1';
 
 export const defaults = (): AppState => ({
-  v: 1, hh: 2, plan: [], checks: {}, have: {}, extras: [], reviews: {}, saved: [], pickN: 2, prefs: defaultPrefs(),
+  v: 1, hh: 2, plan: [], checks: {}, have: {}, extras: [], reviews: {}, saved: [], pickN: 2, intro: false, prefs: defaultPrefs(),
 });
 
 function normalize(raw: unknown): AppState {
