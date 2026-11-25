@@ -61,5 +61,7 @@ export type AppState = {
   extras: Extra[];
   reviews: Record<string, Review>;
   saved: SavedPlan[];
+  /** how many meals "Pick for me" adds at a time */
+  pickN: number;
   prefs: Prefs;
 };
