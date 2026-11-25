@@ -3,12 +3,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '../lib/store';
 import { Button, tap } from '../ui/kit';
 import { C, F } from '../ui/theme';
-const MARK = require('../../assets/logo-mark.png');
 
 type IconName = keyof typeof Ionicons.glyphMap;
 const STEPS: { icon: IconName; title: string; text: string; hint: string }[] = [
@@ -47,7 +46,7 @@ export default function Welcome() {
   return (
     <View style={[s.wrap, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 16 }]}>
       <View style={s.top}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}><Image source={MARK} style={{ width: 30, height: 30, marginRight: 7 }} accessibilityIgnoresInvertColors /><Text style={s.brand}>Meal<Text style={{ color: C.leaf }}>set</Text></Text></View>
+        <Text style={s.brand}>Meal<Text style={{ color: C.leaf }}>set</Text></Text>
         {!last && (
           <Pressable hitSlop={12} accessibilityRole="button" onPress={done}>
             <Text style={s.skip}>Skip</Text>
