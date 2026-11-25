@@ -1,9 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C, F } from './theme';
+const MARK = require('../../assets/logo-mark.png');
 
 /** Top bar used on every tab: the app name and a shortcut to Preferences. */
 export function TopBar({ children }: { children?: ReactNode }) {
@@ -11,7 +12,7 @@ export function TopBar({ children }: { children?: ReactNode }) {
   return (
     <View style={[s.top, { paddingTop: insets.top + 10 }]}>
       <View style={s.row}>
-        <Text style={s.brand} accessibilityRole="header">Meal<Text style={{ color: C.leaf }}>set</Text></Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}><Image source={MARK} style={{ width: 24, height: 24, marginRight: 6, borderRadius: 6 }} accessibilityIgnoresInvertColors /><Text style={s.brand} accessibilityRole="header">Meal<Text style={{ color: C.leaf }}>set</Text></Text></View>
         <View style={{ flex: 1 }} />
         <Pressable accessibilityRole="button" accessibilityLabel="How it works" onPress={() => router.push('/welcome')} style={[s.help, { marginRight: 6 }]}>
           <Text style={s.helpText}>How it works</Text>
@@ -29,9 +30,9 @@ export function TopBar({ children }: { children?: ReactNode }) {
 const s = StyleSheet.create({
   top: { backgroundColor: C.bg, paddingHorizontal: 16, paddingBottom: 10, borderBottomWidth: 1, borderBottomColor: C.line },
   row: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  brand: { fontFamily: F.displayBold, fontSize: 27, color: C.ink, letterSpacing: -0.4 },
-  help: { borderWidth: 1, borderColor: C.line, backgroundColor: C.surface, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 10 },
+  brand: { fontFamily: F.displayBold, fontSize: 25, color: C.ink, letterSpacing: -0.4 },
+  help: { borderWidth: 1, borderColor: C.line, backgroundColor: C.surface, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 9 },
   helpText: { fontFamily: F.medium, fontSize: 12.5, color: C.ink },
-  prefs: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 10 },
+  prefs: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 9 },
   prefsText: { fontFamily: F.semibold, fontSize: 12.5, color: C.leafInk },
 });

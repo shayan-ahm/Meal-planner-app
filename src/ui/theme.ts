@@ -1,17 +1,17 @@
-// White and green, same as the prototype.
+// White and light blue.
 export const C = {
   bg: '#FFFFFF',
-  surface: '#F3F7F4',
-  ink: '#14201A',
-  muted: '#5B6A61',
-  line: '#E1E8E3',
-  leaf: '#15803D',
+  surface: '#F2F8FD',
+  ink: '#13202C',
+  muted: '#5A6876',
+  line: '#DDE8F2',
+  leaf: '#2B86CF',
   leafInk: '#FFFFFF',
-  leafSoft: '#E5F4EA',
-  soft: '#EEF7F0',
+  leafSoft: '#E3F1FC',
+  soft: '#EDF6FD',
   warn: '#D64545',
   star: '#E0A100',
-  scrim: 'rgba(10,30,18,0.4)',
+  scrim: 'rgba(10,22,34,0.4)',
 };
 
 export const F = {
@@ -23,7 +23,7 @@ export const F = {
 };
 
 export const shadow = {
-  shadowColor: '#14201A',
+  shadowColor: '#13202C',
   shadowOpacity: 0.08,
   shadowRadius: 10,
   shadowOffset: { width: 0, height: 4 },

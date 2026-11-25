@@ -169,7 +169,7 @@ const s = StyleSheet.create({
   aisle: { gap: 3 },
   aisleTitle: { fontSize: 12, paddingTop: 8, paddingBottom: 4, paddingHorizontal: 2 },
   item: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: C.surface, paddingVertical: 11, paddingHorizontal: 12, borderRadius: 10 },
-  box: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, borderColor: '#B7C4BC', alignItems: 'center', justifyContent: 'center', backgroundColor: C.bg },
+  box: { width: 24, height: 24, borderRadius: 6, borderWidth: 2, borderColor: '#B8C8D6', alignItems: 'center', justifyContent: 'center', backgroundColor: C.bg },
   boxOn: { backgroundColor: C.leaf, borderColor: C.leaf },
   tick: { color: '#fff', fontSize: 14, fontFamily: F.semibold, lineHeight: 16 },
   nm: { flexDirection: 'row', alignItems: 'baseline', gap: 8 },
