@@ -1,0 +1,11 @@
+// Cloudflare deploy settings for the Mealset website (home, privacy, support).
+// The site is plain static files in website/; there is no server code.
+{
+  "name": "mealset",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./website",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
