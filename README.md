@@ -1,8 +1,8 @@
-# Forkcast
+# Mealset
 
 A simple meal planner for iPhone (Android later). Pick the meals you want to cook, get one grocery list for all of them, then cook step by step.
 
-Built with Expo (React Native) and TypeScript. Started from the Forkcast HTML prototype: 78 beginner-friendly recipes, each with a photo.
+Built with Expo (React Native) and TypeScript. Started from the HTML prototype (then called Forkcast): 78 beginner-friendly recipes, each with a photo.
 
 ## What it does
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Forkcast",
+    "name": "Mealset",
     "slug": "meal-planner-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.forkcast.mealplanner"
+      "bundleIdentifier": "app.mealset.mealplanner"
     },
     "android": {
       "adaptiveIcon": {
@@ -18,7 +18,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "app.forkcast.mealplanner"
+      "package": "app.mealset.mealplanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -39,7 +39,7 @@
         }
       ]
     ],
-    "scheme": "forkcast",
+    "scheme": "mealset",
     "owner": "shayan.ahm",
     "extra": {
       "eas": {

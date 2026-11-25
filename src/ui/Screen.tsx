@@ -11,7 +11,7 @@ export function TopBar({ children }: { children?: ReactNode }) {
   return (
     <View style={[s.top, { paddingTop: insets.top + 10 }]}>
       <View style={s.row}>
-        <Text style={s.brand} accessibilityRole="header">Fork<Text style={{ color: C.leaf }}>cast</Text></Text>
+        <Text style={s.brand} accessibilityRole="header">Meal<Text style={{ color: C.leaf }}>set</Text></Text>
         <View style={{ flex: 1 }} />
         <Pressable accessibilityRole="button" accessibilityLabel="How it works" onPress={() => router.push('/welcome')} style={[s.help, { marginRight: 6 }]}>
           <Text style={s.helpText}>How it works</Text>

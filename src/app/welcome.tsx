@@ -46,7 +46,7 @@ export default function Welcome() {
   return (
     <View style={[s.wrap, { paddingTop: insets.top + 12, paddingBottom: insets.bottom + 16 }]}>
       <View style={s.top}>
-        <Text style={s.brand}>Fork<Text style={{ color: C.leaf }}>cast</Text></Text>
+        <Text style={s.brand}>Meal<Text style={{ color: C.leaf }}>set</Text></Text>
         {!last && (
           <Pressable hitSlop={12} accessibilityRole="button" onPress={done}>
             <Text style={s.skip}>Skip</Text>

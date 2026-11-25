@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { defaultPrefs } from './logic';
 import type { AppState, PlanEntry, Recipe } from './types';
 
-const KEY = 'forkcast.state.v1';
+const KEY = 'forkcast.state.v1'; // old name kept so saved plans survive the rename
 
 export const defaults = (): AppState => ({
   v: 1, hh: 2, plan: [], checks: {}, have: {}, extras: [], reviews: {}, saved: [], pickN: 2, favs: [], intro: false, prefs: defaultPrefs(),
