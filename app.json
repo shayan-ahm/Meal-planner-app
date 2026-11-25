@@ -34,6 +34,18 @@
       "backgroundColor": "#FFFFFF",
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain"
+    },
+    "owner": "shayan.ahm",
+    "extra": {
+      "eas": {
+        "projectId": "ba66c499-e267-4de7-8c88-e1cef7e77eda"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ba66c499-e267-4de7-8c88-e1cef7e77eda"
     }
   }
 }
