@@ -51,7 +51,7 @@ export default function MyMeals() {
           <View style={s.empty}>
             <Text style={s.emptyTitle}>How it works</Text>
             {[
-              ['restaurant-outline', 'Pick a few meals', 'Tap the green button below, or browse Recipes.'],
+              ['restaurant-outline', 'Pick a few meals', 'Tap “Add recipes” below, or let us pick for you.'],
               ['cart-outline', 'Get one grocery list', 'Everything you need, in one list.'],
               ['flame-outline', 'Cook step by step', 'Big steps and timers. Tap Exit any time.'],
             ].map(([icon, t, d], k) => (
@@ -95,20 +95,28 @@ export default function MyMeals() {
           );
         })}
 
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Add recipes"
+          onPress={() => { tap(); router.navigate('/recipes'); }}
+          style={({ pressed }) => [s.addBtn, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+        >
+          <Ionicons name="add-circle" size={26} color={C.leafInk} />
+          <Text style={s.addBtnText}>Add recipes</Text>
+        </Pressable>
         <View style={s.pickRow}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Pick ${state.pickN} meals for me`}
             onPress={pick}
-            style={({ pressed }) => [s.pickBtn, plan.length > 0 && s.pickBtnSoft, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+            style={({ pressed }) => [s.pickBtn, s.pickBtnSoft, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
           >
-            <Ionicons name="shuffle" size={22} color={plan.length ? C.leaf : C.leafInk} />
-            <Text style={[s.pickBtnText, plan.length > 0 && { color: C.leaf }]}>{plan.length ? `Pick ${state.pickN} more for me` : `Pick ${state.pickN} meals for me`}</Text>
+            <Ionicons name="shuffle" size={20} color={C.leaf} />
+            <Text style={[s.pickBtnText, { color: C.leaf }]}>{plan.length ? `Pick ${state.pickN} more for me` : `Pick ${state.pickN} meals for me`}</Text>
           </Pressable>
           <Stepper value={state.pickN} label={String(state.pickN)} min={1} max={7} compact onChange={(v) => update((st) => ({ ...st, pickN: v }))} />
         </View>
         <Muted style={{ textAlign: 'center', marginTop: -4 }}>A varied mix that shares ingredients. Use − and + to choose how many.</Muted>
-        <Button title="Choose recipes" onPress={() => router.navigate('/recipes')} big />
         {state.favs.length > 0 && (
           <Button title={`♥  Pick from my favourites (${state.favs.length})`} kind="ghost" onPress={() => router.navigate('/recipes?cat=fav')} />
         )}
@@ -134,9 +142,11 @@ const s = StyleSheet.create({
   howNumText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
   howTitle: { fontFamily: F.semibold, fontSize: 15, color: C.ink },
   pickRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  pickBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 16, paddingHorizontal: 14, ...shadow },
+  pickBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 13, paddingHorizontal: 14 },
+  addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 18, ...shadow },
+  addBtnText: { fontFamily: F.displayBold, fontSize: 19, color: C.leafInk },
   pickBtnSoft: { backgroundColor: C.leafSoft, borderWidth: 1.5, borderColor: C.leaf, shadowOpacity: 0, elevation: 0 },
-  pickBtnText: { fontFamily: F.semibold, fontSize: 16, color: C.leafInk },
+  pickBtnText: { fontFamily: F.semibold, fontSize: 15, color: C.leafInk },
   slot: { backgroundColor: C.surface, borderRadius: 14, padding: 12, gap: 10, ...shadow },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   thumb: { width: 64, height: 64, borderRadius: 12 },
