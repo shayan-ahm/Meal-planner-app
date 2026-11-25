@@ -59,6 +59,15 @@ export default function Cook() {
     setI(total);
   };
 
+  // Leave cook mode at any step. Falls back to My meals if there's no screen to go back to.
+  const exit = () => {
+    tap();
+    setTimerEnd(null);
+    try { player.pause(); } catch {}
+    if (router.canGoBack()) router.back();
+    else router.replace('/');
+  };
+
   let body;
   if (i === 0) {
     body = (
@@ -87,7 +96,12 @@ export default function Cook() {
             </Pressable>
           ))}
         </View>
-        <Muted>Meals you rate 4 or 5 stars show up under “My favourites” in Recipes.</Muted>
+        <Button
+          title={state.favs.includes(r.id) ? '♥  In your favourites' : '♡  Add to favourites'}
+          kind="ghost"
+          onPress={() => update(actions.toggleFav(r.id))}
+        />
+        <Muted>Favourites are easy to find again under “My favourites” in Recipes.</Muted>
         {entry && <Muted>Marked as cooked, so it’s off your grocery list.</Muted>}
       </>
     );
@@ -122,13 +136,15 @@ export default function Cook() {
             </Text>
           </Pressable>
         )}
-        <Pressable hitSlop={12} accessibilityLabel="Close cooking" onPress={() => router.back()}><Text style={s.x}>×</Text></Pressable>
+        <Pressable hitSlop={10} accessibilityRole="button" accessibilityLabel="Exit cooking" onPress={exit} style={s.exit}>
+          <Text style={s.exitText}>✕  Exit</Text>
+        </Pressable>
       </View>
       <View style={s.prog}>{Array.from({ length: total }, (_, k) => <View key={k} style={[s.progBar, k <= i && { backgroundColor: C.leaf }]} />)}</View>
       <ScrollView contentContainerStyle={s.body}>{body}</ScrollView>
       <View style={[s.nav, { paddingBottom: 12 + insets.bottom }]}>
         {rating ? (
-          <Button title="Close" big style={{ flex: 1 }} onPress={() => router.back()} />
+          <Button title="Close" big style={{ flex: 1 }} onPress={exit} />
         ) : (
           <>
             {i > 0 && <Button title="Back" kind="ghost" big style={{ flex: 1 }} onPress={() => setI(i - 1)} />}
@@ -147,7 +163,8 @@ export default function Cook() {
 
 const s = StyleSheet.create({
   bar: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingHorizontal: 16, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: C.line },
-  x: { fontSize: 30, color: C.muted, lineHeight: 32 },
+  exit: { flexDirection: 'row', alignItems: 'center', backgroundColor: C.surface, borderWidth: 1, borderColor: C.line, borderRadius: 99, paddingVertical: 8, paddingHorizontal: 14 },
+  exitText: { fontFamily: F.semibold, fontSize: 14, color: C.ink },
   timer: { backgroundColor: C.leafSoft, borderRadius: 99, paddingVertical: 6, paddingHorizontal: 12 },
   timerText: { fontFamily: F.semibold, color: C.leaf, fontVariant: ['tabular-nums'] },
   prog: { flexDirection: 'row', gap: 4, paddingHorizontal: 16, paddingTop: 10 },

@@ -78,9 +78,11 @@ export function info(r: Recipe): Info {
   const macro = known >= Math.max(1, r.i.length * 0.6)
     ? { kcal: Math.round(nu[0] / 10) * 10, prot: Math.round(nu[1]), carb: Math.round(nu[2]), fat: Math.round(nu[3]) }
     : null;
-  const hp = !!macro && macro.prot >= 30;
-  const loC = !!macro && macro.carb <= 25;
-  const loF = !!macro && macro.fat <= 15;
+  // Labels use share of calories so a small snack can't pass as "high protein" or "low carb".
+  const share = (g: number, kcalPerG: number) => (macro && macro.kcal ? (g * kcalPerG) / macro.kcal : 0);
+  const hp = !!macro && macro.prot >= 25 && share(macro.prot, 4) >= 0.2;
+  const loC = !!macro && macro.carb <= 30 && share(macro.carb, 4) <= 0.26;
+  const loF = !!macro && share(macro.fat, 9) <= 0.3;
   const loCal = !!macro && macro.kcal <= 500;
   if (hp) labels.push('High protein');
   if (loC) labels.push('Low carb');
@@ -151,7 +153,7 @@ function dishTypes(r: Recipe) {
   return d;
 }
 
-export function matchCategory(r: Recipe, k: string, stars: (id: string) => number): boolean {
+export function matchCategory(r: Recipe, k: string, fav: (id: string) => boolean): boolean {
   const f = info(r);
   switch (k) {
     case 'all': return true;
@@ -163,7 +165,7 @@ export function matchCategory(r: Recipe, k: string, stars: (id: string) => numbe
     case 'loF': return f.loF;
     case 'loCal': return f.loCal;
     case 'Breakfast': case 'Snack': return f.type === k;
-    case 'fav': return stars(r.id) >= 4;
+    case 'fav': return fav(r.id);
     case 'Air fryer': case 'Oven': case 'No cooking': return f.eq.includes(k);
     case 'bowls': case 'pasta': case 'tacos': case 'soups': case 'salads': case 'onepan': return dishTypes(r).has(k);
     default: return f.protein === k;
@@ -308,18 +310,38 @@ export function listAsText(S: AppState): string {
 
 /* ---------- Picking meals ---------- */
 
-/** Picks meals that share ingredients with what is already planned, so the list stays short. */
-export function pickForMe(S: AppState, count: number): PlanEntry[] {
+/**
+ * Picks meals for the person. Variety comes first: a protein, cuisine or dish type already
+ * in the plan counts against a recipe, so you don't get three chicken dinners. Sharing
+ * ingredients with the plan is a smaller bonus that keeps the grocery list short.
+ */
+export function pickForMe(S: AppState, count: number, rand: () => number = Math.random): PlanEntry[] {
   const plan = S.plan.slice();
+  const tally = (key: (r: Recipe) => string[]) => {
+    const t: Record<string, number> = {};
+    for (const e of plan) { const r = recipe(e.r); if (r) for (const k of key(r)) t[k] = (t[k] || 0) + 1; }
+    return t;
+  };
+  const dishes = (r: Recipe) => [...dishTypes(r)];
   for (let k = 0; k < count; k++) {
     const n = needs(plan);
     const taken = new Set(plan.map((e) => e.r));
+    const prot = tally((r) => [info(r).protein]);
+    const cui = tally((r) => [info(r).cui]);
+    const dish = tally(dishes);
     const cands = RECIPES.filter((r) => !taken.has(r.id) && fits(r, S.prefs) && info(r).type === 'Meal')
-      .map((r) => ({ r, score: newItemsFor(r, n) * 10000 + prefRank(r, S.prefs) + Math.random() }))
+      .map((r) => {
+        const f = info(r);
+        const repeat = (prot[f.protein] || 0) * 40 + (cui[f.cui] || 0) * 10 + dishes(r).reduce((a, d) => a + (dish[d] || 0) * 12, 0);
+        const shared = sharedFor(r, n) * 4 - newItemsFor(r, n) * 2;
+        const liked = S.favs.includes(r.id) || (S.reviews[r.id]?.stars || 0) >= 4 ? 8 : 0;
+        const pref = prefRank(r, S.prefs) / 100;
+        return { r, score: repeat - shared - liked + pref + rand() * 15 };
+      })
       .sort((a, b) => a.score - b.score);
     if (!cands.length) break;
-    const top = cands.slice(0, 3);
-    plan.push({ r: top[Math.floor(Math.random() * top.length)].r.id, s: S.hh });
+    const top = cands.slice(0, 4);
+    plan.push({ r: top[Math.floor(rand() * top.length)].r.id, s: S.hh });
   }
   return plan;
 }

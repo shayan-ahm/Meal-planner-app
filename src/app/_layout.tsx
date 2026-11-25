@@ -34,6 +34,7 @@ function Root() {
         <Stack.Screen name="recipe/[id]" options={{ presentation: 'modal', headerShown: false }} />
         <Stack.Screen name="cook/[id]" options={{ presentation: 'fullScreenModal', headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="preferences" options={{ presentation: 'modal', title: 'Preferences' }} />
+        <Stack.Screen name="welcome" options={{ presentation: 'fullScreenModal', headerShown: false, gestureEnabled: false }} />
         <Stack.Screen name="saved" options={{ presentation: 'modal', title: 'Saved plans' }} />
       </Stack>
     </>

@@ -1,7 +1,8 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { info } from '../lib/logic';
-import { actions, inPlan, useStore } from '../lib/store';
+import { actions, inPlan, isFav, useStore } from '../lib/store';
 import type { Recipe } from '../lib/types';
 import { Photo, Tag, tap } from './kit';
 import { C, F, shadow } from './theme';
@@ -12,6 +13,7 @@ export function RecipeCard({ r }: { r: Recipe }) {
   const f = info(r);
   const added = inPlan(state, r);
   const stars = state.reviews[r.id]?.stars || 0;
+  const fav = isFav(state, r.id);
   const tags = [f.type !== 'Meal' ? f.type : '', f.labels.find((l) => l === 'Vegan' || l === 'Vegetarian') || '', f.hp ? 'High protein' : '']
     .filter(Boolean).slice(0, 2);
   return (
@@ -24,6 +26,16 @@ export function RecipeCard({ r }: { r: Recipe }) {
           {stars > 0 && <Text style={s.stars}>{'★'.repeat(stars)}<Text style={{ color: C.line }}>{'★'.repeat(5 - stars)}</Text></Text>}
           {tags.length > 0 && <View style={s.tags}>{tags.map((t) => <Tag key={t} label={t} alt={t === 'High protein'} />)}</View>}
         </View>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={fav ? `Remove ${r.n} from favourites` : `Add ${r.n} to favourites`}
+        accessibilityState={{ selected: fav }}
+        hitSlop={6}
+        onPress={() => { tap(); update(actions.toggleFav(r.id)); }}
+        style={[s.add, s.heart]}
+      >
+        <Ionicons name={fav ? 'heart' : 'heart-outline'} size={20} color={fav ? C.warn : C.ink} />
       </Pressable>
       <Pressable
         accessibilityRole="button"
@@ -53,5 +65,6 @@ const s = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', shadowColor: '#000', shadowOpacity: 0.18, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 3,
   },
   addOn: { backgroundColor: C.leaf },
+  heart: { right: undefined, left: 8, width: 36, height: 36, borderRadius: 18, top: 10 },
   addText: { color: C.leaf, fontSize: 24, lineHeight: 26, fontFamily: F.semibold },
 });

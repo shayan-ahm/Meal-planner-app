@@ -61,5 +61,11 @@ export type AppState = {
   extras: Extra[];
   reviews: Record<string, Review>;
   saved: SavedPlan[];
+  /** how many meals "Pick for me" adds at a time */
+  pickN: number;
+  /** recipe ids the person hearted */
+  favs: string[];
+  /** true once the first-time guide has been seen */
+  intro?: boolean;
   prefs: Prefs;
 };

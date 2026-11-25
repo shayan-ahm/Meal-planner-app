@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Forkcast",
+    "name": "Mealset",
     "slug": "meal-planner-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,17 +8,20 @@
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.forkcast.mealplanner"
+      "bundleIdentifier": "app.mealset.mealplanner",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#15803D",
+        "backgroundColor": "#3DB56A",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "app.forkcast.mealplanner"
+      "package": "app.mealset.mealplanner"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -27,13 +30,30 @@
       "expo-router",
       "expo-image",
       "expo-font",
-      "expo-audio"
+      "expo-audio",
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#FFFFFF",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain"
+        }
+      ]
     ],
-    "scheme": "forkcast",
-    "splash": {
-      "backgroundColor": "#FFFFFF",
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain"
+    "scheme": "mealset",
+    "owner": "shayan.ahm",
+    "extra": {
+      "eas": {
+        "projectId": "ba66c499-e267-4de7-8c88-e1cef7e77eda"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/ba66c499-e267-4de7-8c88-e1cef7e77eda"
     }
   }
 }

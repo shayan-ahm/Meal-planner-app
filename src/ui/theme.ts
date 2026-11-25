@@ -1,14 +1,14 @@
-// White and green, same as the prototype.
+// White and fresh green.
 export const C = {
   bg: '#FFFFFF',
-  surface: '#F3F7F4',
+  surface: '#F2F8F4',
   ink: '#14201A',
   muted: '#5B6A61',
-  line: '#E1E8E3',
-  leaf: '#15803D',
+  line: '#DFEAE2',
+  leaf: '#1C8F4C',
   leafInk: '#FFFFFF',
-  leafSoft: '#E5F4EA',
-  soft: '#EEF7F0',
+  leafSoft: '#E2F5E8',
+  soft: '#EEF8F1',
   warn: '#D64545',
   star: '#E0A100',
   scrim: 'rgba(10,30,18,0.4)',
