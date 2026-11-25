@@ -77,44 +77,44 @@ export default function MyMeals() {
                   style={({ pressed }) => [s.cook, e.cooked && s.cookDone, pressed && { opacity: 0.85 }]}
                   onPress={() => { tap(); router.push(`/cook/${r.id}`); }}
                 >
-                  <Ionicons name="flame" size={18} color={e.cooked ? C.leaf : C.leafInk} />
+                  <Ionicons name="flame" size={16} color={e.cooked ? C.leaf : C.leafInk} />
                   <Text style={[s.cookText, e.cooked && { color: C.leaf }]}>{e.cooked ? 'Cook again' : 'Start cooking'}</Text>
                 </Pressable>
+                <View style={{ flex: 1 }} />
                 <Stepper value={e.s} label={servingsLabel(e.s)} onChange={(v) => update(actions.setServings(r.id, v))} />
               </View>
             </View>
           );
         })}
 
+        {plan.length > 0 && <Button title={`See grocery list (${items} items)`} big onPress={() => router.navigate('/list')} />}
+
+        {/* Adding meals: one clear green button, with "pick for me" as a quieter option. */}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Add recipes"
           onPress={() => { tap(); router.navigate('/recipes'); }}
-          style={({ pressed }) => [s.addBtn, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+          style={({ pressed }) => [s.addBtn, plan.length > 0 && s.addBtnSoft, pressed && { opacity: 0.85 }]}
         >
-          <Ionicons name="add-circle" size={26} color={C.leafInk} />
-          <Text style={s.addBtnText}>Add recipes</Text>
+          <Ionicons name="add" size={22} color={plan.length ? C.leaf : C.leafInk} />
+          <Text style={[s.addBtnText, plan.length > 0 && { color: C.leaf }]}>{plan.length ? 'Add more recipes' : 'Add recipes'}</Text>
         </Pressable>
         <View style={s.pickRow}>
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={`Pick ${state.pickN} meals for me`}
             onPress={pick}
-            style={({ pressed }) => [s.pickBtn, s.pickBtnSoft, pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] }]}
+            style={({ pressed }) => [s.pickBtn, pressed && { opacity: 0.7 }]}
           >
-            <Ionicons name="shuffle" size={20} color={C.leaf} />
-            <Text style={[s.pickBtnText, { color: C.leaf }]}>{plan.length ? `Pick ${state.pickN} more for me` : `Pick ${state.pickN} meals for me`}</Text>
+            <Ionicons name="shuffle" size={18} color={C.leaf} />
+            <Text style={s.pickBtnText}>{plan.length ? `Pick ${state.pickN} more for me` : `Or pick ${state.pickN} for me`}</Text>
           </Pressable>
           <Stepper value={state.pickN} label={String(state.pickN)} min={1} max={7} compact onChange={(v) => update((st) => ({ ...st, pickN: v }))} />
         </View>
-        <Muted style={{ textAlign: 'center', marginTop: -4 }}>A varied mix that shares ingredients. Use − and + to choose how many.</Muted>
-        {state.favs.length > 0 && (
-          <Button title={`♥  Pick from my favourites (${state.favs.length})`} kind="ghost" onPress={() => router.navigate('/recipes?cat=fav')} />
-        )}
-        {plan.length > 0 && <Button title={`See grocery list (${items} items)`} big onPress={() => router.navigate('/list')} />}
         {macros.length > 0 && <Muted style={{ textAlign: 'center' }}>Average per serving: {avg('kcal')} kcal · {avg('prot')}g protein</Muted>}
 
         <View style={s.links}>
+          {state.favs.length > 0 && <Button title={`♥ My favourites (${state.favs.length})`} kind="link" onPress={() => router.navigate('/recipes?cat=fav')} />}
           {plan.length > 0 && <Button title="Save this plan" kind="link" onPress={savePlan} />}
           {state.saved.length > 0 && <Button title={`Saved plans (${state.saved.length})`} kind="link" onPress={() => router.push('/saved')} />}
           {plan.length > 0 && <Button title="Clear all meals" kind="link" onPress={clearAll} />}
@@ -128,23 +128,19 @@ const s = StyleSheet.create({
   main: { padding: 16, gap: 12, paddingBottom: 40 },
   empty: { gap: 12, padding: 16, backgroundColor: C.surface, borderRadius: 14 },
   emptyTitle: { fontFamily: F.display, fontSize: 17, color: C.ink },
-  how: { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  howNum: { width: 28, height: 28, borderRadius: 14, backgroundColor: C.leaf, alignItems: 'center', justifyContent: 'center' },
-  howNumText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
-  howTitle: { fontFamily: F.semibold, fontSize: 15, color: C.ink },
   pickRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  pickBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 13, paddingHorizontal: 14 },
-  addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: C.leaf, borderRadius: 14, paddingVertical: 18, ...shadow },
-  addBtnText: { fontFamily: F.displayBold, fontSize: 19, color: C.leafInk },
-  pickBtnSoft: { backgroundColor: C.leafSoft, borderWidth: 1.5, borderColor: C.leaf, shadowOpacity: 0, elevation: 0 },
-  pickBtnText: { fontFamily: F.semibold, fontSize: 15, color: C.leafInk },
+  pickBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: C.bg, borderWidth: 1, borderColor: C.line, borderRadius: 12, paddingVertical: 11, paddingHorizontal: 12 },
+  pickBtnText: { fontFamily: F.semibold, fontSize: 15, color: C.leaf },
+  addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: C.leaf, borderRadius: 12, paddingVertical: 14 },
+  addBtnSoft: { backgroundColor: C.leafSoft },
+  addBtnText: { fontFamily: F.semibold, fontSize: 16, color: C.leafInk },
   slot: { backgroundColor: C.surface, borderRadius: 14, padding: 12, gap: 10, ...shadow },
   row: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   thumb: { width: 64, height: 64, borderRadius: 12 },
   name: { fontFamily: F.display, fontSize: 17, lineHeight: 21, color: C.ink },
   x: { fontSize: 24, color: C.muted, paddingHorizontal: 4 },
-  cook: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: C.leaf, borderRadius: 12, paddingVertical: 12 },
-  cookDone: { backgroundColor: C.leafSoft, borderWidth: 1.5, borderColor: C.leaf },
-  cookText: { fontFamily: F.semibold, fontSize: 16, color: C.leafInk },
+  cook: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 9, paddingHorizontal: 16 },
+  cookDone: { backgroundColor: C.leafSoft },
+  cookText: { fontFamily: F.semibold, fontSize: 15, color: C.leafInk },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 8 },
 });
