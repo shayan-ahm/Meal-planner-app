@@ -72,10 +72,14 @@ export default function MyMeals() {
                 </Pressable>
               </View>
               <View style={s.row}>
-                <Pressable style={s.cook} onPress={() => { tap(); router.push(`/cook/${r.id}`); }}>
-                  <Text style={s.cookText}>{e.cooked ? 'Cook again' : 'Cook'}</Text>
+                <Pressable
+                  accessibilityRole="button"
+                  style={({ pressed }) => [s.cook, e.cooked && s.cookDone, pressed && { opacity: 0.85 }]}
+                  onPress={() => { tap(); router.push(`/cook/${r.id}`); }}
+                >
+                  <Ionicons name="flame" size={18} color={e.cooked ? C.leaf : C.leafInk} />
+                  <Text style={[s.cookText, e.cooked && { color: C.leaf }]}>{e.cooked ? 'Cook again' : 'Start cooking'}</Text>
                 </Pressable>
-                <View style={{ flex: 1 }} />
                 <Stepper value={e.s} label={servingsLabel(e.s)} onChange={(v) => update(actions.setServings(r.id, v))} />
               </View>
             </View>
@@ -139,7 +143,8 @@ const s = StyleSheet.create({
   thumb: { width: 64, height: 64, borderRadius: 12 },
   name: { fontFamily: F.display, fontSize: 17, lineHeight: 21, color: C.ink },
   x: { fontSize: 24, color: C.muted, paddingHorizontal: 4 },
-  cook: { backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 7, paddingHorizontal: 16 },
-  cookText: { fontFamily: F.semibold, fontSize: 13, color: C.leafInk },
+  cook: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, backgroundColor: C.leaf, borderRadius: 12, paddingVertical: 12 },
+  cookDone: { backgroundColor: C.leafSoft, borderWidth: 1.5, borderColor: C.leaf },
+  cookText: { fontFamily: F.semibold, fontSize: 16, color: C.leafInk },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 8 },
 });

@@ -52,6 +52,16 @@ export default function RecipeScreen() {
         </View>
         {allergens.length > 0 && <Muted>Contains: {allergens.join(', ')}</Muted>}
 
+        <H3>Nutrition per serving</H3>
+        {m ? (
+          <View style={s.nut}>
+            {([['kcal', m.kcal], ['protein', m.prot + 'g'], ['carbs', m.carb + 'g'], ['fat', m.fat + 'g']] as const).map(([l, v]) => (
+              <View key={l} style={s.nutCell}><Text style={s.nutVal}>{v}</Text><Muted>{l}</Muted></View>
+            ))}
+          </View>
+        ) : <Muted>Nutrition isn’t available for this recipe yet.</Muted>}
+        <Muted style={{ fontSize: 11 }}>Estimates from typical ingredient values.</Muted>
+
         <View style={s.head}>
           <H3 style={{ flex: 1 }}>Ingredients</H3>
           <Stepper value={serv} label={servingsLabel(serv)} onChange={setServ} />
@@ -70,16 +80,6 @@ export default function RecipeScreen() {
           ))}
         </View>
         {!!f.tip && <View style={s.tip}><T><Text style={{ fontFamily: F.semibold, color: C.leaf }}>Tip: </Text>{f.tip}</T></View>}
-
-        <H3>Nutrition per serving</H3>
-        {m ? (
-          <View style={s.nut}>
-            {([['kcal', m.kcal], ['protein', m.prot + 'g'], ['carbs', m.carb + 'g'], ['fat', m.fat + 'g']] as const).map(([l, v]) => (
-              <View key={l} style={s.nutCell}><Text style={s.nutVal}>{v}</Text><Muted>{l}</Muted></View>
-            ))}
-          </View>
-        ) : <Muted>Nutrition isn’t available for this recipe yet.</Muted>}
-        <Muted style={{ fontSize: 11 }}>Estimates from typical ingredient values.</Muted>
 
         <H3>Your rating</H3>
         <View style={{ flexDirection: 'row', gap: 4 }}>
