@@ -49,21 +49,8 @@ export default function MyMeals() {
 
         {!plan.length && (
           <View style={s.empty}>
-            <Text style={s.emptyTitle}>How it works</Text>
-            {[
-              ['restaurant-outline', 'Pick a few meals', 'Tap “Add recipes” below, or let us pick for you.'],
-              ['cart-outline', 'Get one grocery list', 'Everything you need, in one list.'],
-              ['flame-outline', 'Cook step by step', 'Big steps and timers. Tap Exit any time.'],
-            ].map(([icon, t, d], k) => (
-              <View key={t} style={s.how}>
-                <View style={s.howNum}><Text style={s.howNumText}>{k + 1}</Text></View>
-                <View style={{ flex: 1 }}>
-                  <Text style={s.howTitle}>{t}</Text>
-                  <Muted>{d}</Muted>
-                </View>
-                <Ionicons name={icon as 'cart-outline'} size={22} color={C.leaf} />
-              </View>
-            ))}
+            <Text style={s.emptyTitle}>No meals yet</Text>
+            <Muted>Add a few meals and we’ll make one grocery list for all of them.</Muted>
           </View>
         )}
 
