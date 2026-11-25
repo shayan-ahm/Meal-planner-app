@@ -13,8 +13,12 @@ export function TopBar({ children }: { children?: ReactNode }) {
     <View style={[s.top, { paddingTop: insets.top + 10 }]}>
       <View style={s.row}>
         <Text style={s.brand} accessibilityRole="header">Fork<Text style={{ color: C.leaf }}>cast</Text></Text>
+        <View style={{ flex: 1 }} />
+        <Pressable accessibilityRole="button" accessibilityLabel="How it works" onPress={() => router.push('/welcome')} style={[s.prefs, { marginRight: 8 }]}>
+          <Text style={s.prefsText}>? How it works</Text>
+        </Pressable>
         <Pressable accessibilityRole="button" accessibilityLabel="Preferences" onPress={() => router.push('/preferences')} style={s.prefs}>
-          <Text style={s.prefsText}>Preferences · <Text style={{ fontFamily: F.semibold }}>{state.hh}</Text> ppl</Text>
+          <Text style={s.prefsText}>⚙ <Text style={{ fontFamily: F.semibold }}>{state.hh}</Text> ppl</Text>
         </Pressable>
       </View>
       {children}

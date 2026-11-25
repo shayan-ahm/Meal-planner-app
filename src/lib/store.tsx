@@ -8,7 +8,7 @@ import type { AppState, PlanEntry, Recipe } from './types';
 const KEY = 'forkcast.state.v1';
 
 export const defaults = (): AppState => ({
-  v: 1, hh: 2, plan: [], checks: {}, have: {}, extras: [], reviews: {}, saved: [], pickN: 2, intro: false, prefs: defaultPrefs(),
+  v: 1, hh: 2, plan: [], checks: {}, have: {}, extras: [], reviews: {}, saved: [], pickN: 2, favs: [], intro: false, prefs: defaultPrefs(),
 });
 
 function normalize(raw: unknown): AppState {
@@ -26,6 +26,8 @@ function normalize(raw: unknown): AppState {
     have: s.have || {},
     reviews: s.reviews || {},
     pickN: typeof s.pickN === 'number' ? s.pickN : d.pickN,
+    // Older saves had no hearts: start with the meals rated 4 or 5 stars.
+    favs: Array.isArray(s.favs) ? s.favs : Object.entries(s.reviews || {}).filter(([, v]) => v.stars >= 4).map(([k]) => k),
     prefs: { ...d.prefs, ...(s.prefs || {}) },
   };
 }
@@ -91,8 +93,14 @@ export const actions = {
   addExtra: (name: string) => (s: AppState): AppState => ({ ...s, extras: [...s.extras, { name }] }),
   toggleExtra: (i: number) => (s: AppState): AppState => ({ ...s, extras: s.extras.map((x, k) => (k === i ? { ...x, done: !x.done } : x)) }),
   removeExtra: (i: number) => (s: AppState): AppState => ({ ...s, extras: s.extras.filter((_, k) => k !== i) }),
+  /** Rating 4 or 5 stars also hearts the meal. */
   rate: (id: string, stars: number) => (s: AppState): AppState => ({
-    ...s, reviews: { ...s.reviews, [id]: { notes: s.reviews[id]?.notes || [], stars } },
+    ...s,
+    reviews: { ...s.reviews, [id]: { notes: s.reviews[id]?.notes || [], stars } },
+    favs: stars >= 4 && !s.favs.includes(id) ? [...s.favs, id] : s.favs,
+  }),
+  toggleFav: (id: string) => (s: AppState): AppState => ({
+    ...s, favs: s.favs.includes(id) ? s.favs.filter((x) => x !== id) : [...s.favs, id],
   }),
   addNote: (id: string, t: string) => (s: AppState): AppState => {
     const r = s.reviews[id] || { stars: 0, notes: [] };
@@ -110,4 +118,5 @@ export const actions = {
 };
 
 export const starsOf = (s: AppState) => (id: string) => s.reviews[id]?.stars || 0;
+export const isFav = (s: AppState, id: string) => s.favs.includes(id);
 export const inPlan = (s: AppState, r: Recipe | string) => s.plan.some((p) => p.r === (typeof r === 'string' ? r : r.id));

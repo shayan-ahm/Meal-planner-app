@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
@@ -23,12 +24,17 @@ export default function RecipeScreen() {
   const rv = state.reviews[r.id];
   const stars = rv?.stars || 0;
   const m = f.macro;
+  const fav = state.favs.includes(r.id);
 
   return (
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <ScrollView contentContainerStyle={[s.main, { paddingBottom: 120 + insets.bottom }]} keyboardShouldPersistTaps="handled">
         <View style={s.head}>
           <H2 style={{ flex: 1 }}>{r.n}</H2>
+          <Pressable hitSlop={10} accessibilityRole="button" accessibilityLabel={fav ? 'Remove from favourites' : 'Add to favourites'} onPress={() => { tap(); update(actions.toggleFav(r.id)); }} style={[s.fav, fav && s.favOn]}>
+            <Ionicons name={fav ? 'heart' : 'heart-outline'} size={18} color={fav ? C.warn : C.ink} />
+            <Text style={s.favText}>{fav ? 'Saved' : 'Favourite'}</Text>
+          </Pressable>
           <Pressable hitSlop={12} accessibilityLabel="Close" onPress={() => router.back()}><Text style={s.x}>×</Text></Pressable>
         </View>
         <Photo r={r} style={s.hero} />
@@ -118,6 +124,9 @@ const s = StyleSheet.create({
   main: { padding: 16, gap: 12 },
   head: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   x: { fontSize: 30, color: C.muted, lineHeight: 32 },
+  fav: { flexDirection: 'row', alignItems: 'center', gap: 5, borderWidth: 1, borderColor: C.line, borderRadius: 99, paddingVertical: 6, paddingHorizontal: 10 },
+  favOn: { borderColor: '#F3C1C1', backgroundColor: '#FDECEC' },
+  favText: { fontFamily: F.semibold, fontSize: 13, color: C.ink },
   hero: { width: '100%', aspectRatio: 4 / 3, borderRadius: 14, backgroundColor: C.leafSoft },
   facts: { flexDirection: 'row', gap: 8 },
   fact: { flex: 1, backgroundColor: C.surface, borderRadius: 12, paddingVertical: 8, paddingHorizontal: 10, gap: 2 },

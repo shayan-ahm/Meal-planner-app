@@ -96,7 +96,12 @@ export default function Cook() {
             </Pressable>
           ))}
         </View>
-        <Muted>Meals you rate 4 or 5 stars show up under “My favourites” in Recipes.</Muted>
+        <Button
+          title={state.favs.includes(r.id) ? '♥  In your favourites' : '♡  Add to favourites'}
+          kind="ghost"
+          onPress={() => update(actions.toggleFav(r.id))}
+        />
+        <Muted>Favourites are easy to find again under “My favourites” in Recipes.</Muted>
         {entry && <Muted>Marked as cooked, so it’s off your grocery list.</Muted>}
       </>
     );

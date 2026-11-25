@@ -153,7 +153,7 @@ function dishTypes(r: Recipe) {
   return d;
 }
 
-export function matchCategory(r: Recipe, k: string, stars: (id: string) => number): boolean {
+export function matchCategory(r: Recipe, k: string, fav: (id: string) => boolean): boolean {
   const f = info(r);
   switch (k) {
     case 'all': return true;
@@ -165,7 +165,7 @@ export function matchCategory(r: Recipe, k: string, stars: (id: string) => numbe
     case 'loF': return f.loF;
     case 'loCal': return f.loCal;
     case 'Breakfast': case 'Snack': return f.type === k;
-    case 'fav': return stars(r.id) >= 4;
+    case 'fav': return fav(r.id);
     case 'Air fryer': case 'Oven': case 'No cooking': return f.eq.includes(k);
     case 'bowls': case 'pasta': case 'tacos': case 'soups': case 'salads': case 'onepan': return dishTypes(r).has(k);
     default: return f.protein === k;
@@ -334,7 +334,7 @@ export function pickForMe(S: AppState, count: number, rand: () => number = Math.
         const f = info(r);
         const repeat = (prot[f.protein] || 0) * 40 + (cui[f.cui] || 0) * 10 + dishes(r).reduce((a, d) => a + (dish[d] || 0) * 12, 0);
         const shared = sharedFor(r, n) * 4 - newItemsFor(r, n) * 2;
-        const liked = (S.reviews[r.id]?.stars || 0) >= 4 ? 8 : 0;
+        const liked = S.favs.includes(r.id) || (S.reviews[r.id]?.stars || 0) >= 4 ? 8 : 0;
         const pref = prefRank(r, S.prefs) / 100;
         return { r, score: repeat - shared - liked + pref + rand() * 15 };
       })

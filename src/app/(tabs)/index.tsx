@@ -108,7 +108,10 @@ export default function MyMeals() {
           <Stepper value={state.pickN} label={String(state.pickN)} min={1} max={7} compact onChange={(v) => update((st) => ({ ...st, pickN: v }))} />
         </View>
         <Muted style={{ textAlign: 'center', marginTop: -4 }}>A varied mix that shares ingredients. Use − and + to choose how many.</Muted>
-        <Button title="Browse recipes" kind="ghost" onPress={() => router.navigate('/recipes')} />
+        <Button title="Choose recipes" onPress={() => router.navigate('/recipes')} big />
+        {state.favs.length > 0 && (
+          <Button title={`♥  Pick from my favourites (${state.favs.length})`} kind="ghost" onPress={() => router.navigate('/recipes?cat=fav')} />
+        )}
         {plan.length > 0 && <Button title={`See grocery list (${items} items)`} big onPress={() => router.navigate('/list')} />}
         {macros.length > 0 && <Muted style={{ textAlign: 'center' }}>Average per serving: {avg('kcal')} kcal · {avg('prot')}g protein</Muted>}
 
@@ -116,7 +119,6 @@ export default function MyMeals() {
           {plan.length > 0 && <Button title="Save this plan" kind="link" onPress={savePlan} />}
           {state.saved.length > 0 && <Button title={`Saved plans (${state.saved.length})`} kind="link" onPress={() => router.push('/saved')} />}
           {plan.length > 0 && <Button title="Clear all meals" kind="link" onPress={clearAll} />}
-          <Button title="How it works" kind="link" onPress={() => router.push('/welcome')} />
         </View>
       </ScrollView>
     </View>

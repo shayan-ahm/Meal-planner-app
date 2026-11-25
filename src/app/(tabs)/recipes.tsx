@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { CATEGORIES, CUISINES, RECIPES } from '../../data/recipes';
 import { fits, info, matchCategory, prefRank, searchText } from '../../lib/logic';
-import { starsOf, useStore } from '../../lib/store';
+import { useStore } from '../../lib/store';
 import { Chip, H2, Muted, tap } from '../../ui/kit';
 import { RecipeCard } from '../../ui/RecipeCard';
 import { TopBar } from '../../ui/Screen';
@@ -11,20 +12,29 @@ import { C, F } from '../../ui/theme';
 export default function Recipes() {
   const { state } = useStore();
   const [q, setQ] = useState('');
-  const [cat, setCat] = useState('all');
+  const params = useLocalSearchParams<{ cat?: string }>();
+  const [cat, setCat] = useState(params.cat || 'all');
+  useFocusEffect(useCallback(() => { if (params.cat) setCat(params.cat); }, [params.cat]));
   const [cui, setCui] = useState('');
   const [all, setAll] = useState(false);
   const P = state.prefs;
-  const hasFavs = Object.values(state.reviews).some((v) => v.stars >= 4);
-  const cats = CATEGORIES.filter(([k]) => k !== 'fav' || hasFavs);
+  const hasFavs = state.favs.length > 0;
+  // "My favourites" goes first once there are any.
+  const cats = hasFavs ? [...CATEGORIES.filter(([k]) => k === 'fav'), ...CATEGORIES.filter(([k]) => k !== 'fav')] : CATEGORIES.filter(([k]) => k !== 'fav');
+  // New random order every time the Recipes tab opens, so people see variety.
+  const [seed, setSeed] = useState(() => Math.random());
+  useFocusEffect(useCallback(() => { setSeed(Math.random()); }, []));
   const hidden = RECIPES.filter((r) => !fits(r, P)).length;
 
   const list = useMemo(() => {
-    const stars = starsOf(state);
+    const fav = (id: string) => state.favs.includes(id);
     const qq = q.trim().toLowerCase();
-    return RECIPES.filter((r) => (all || fits(r, P)) && matchCategory(r, cat, stars) && (!cui || info(r).cui === cui) && (!qq || searchText(r).includes(qq)))
-      .sort((a, b) => prefRank(a, P) - prefRank(b, P));
-  }, [q, cat, cui, all, P, state]);
+    // Shuffle, but keep the broad order: favourite cuisines first, main meals before breakfast and snacks.
+    const key = (id: string) => { let h = Math.floor(seed * 2 ** 31); for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0; return h; };
+    const bucket = (r: (typeof RECIPES)[number]) => Math.floor(prefRank(r, P) / 1000);
+    return RECIPES.filter((r) => (all || fits(r, P)) && matchCategory(r, cat, fav) && (!cui || info(r).cui === cui) && (!qq || searchText(r).includes(qq)))
+      .sort((a, b) => bucket(a) - bucket(b) || key(a.id) - key(b.id));
+  }, [q, cat, cui, all, P, state, seed]);
 
   const title = [cat !== 'all' ? cats.find((c) => c[0] === cat)?.[2] : '', cui].filter(Boolean).join(' · ');
   const planned = state.plan.length;
