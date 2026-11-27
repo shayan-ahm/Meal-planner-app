@@ -18,6 +18,10 @@ export default function MyMeals() {
   // First launch: show the short guide once.
   useEffect(() => { if (!state.intro) router.push('/welcome'); }, [state.intro]);
   const pick = () => { tap(); update((st) => actions.setPlan(pickForMe(st, st.pickN))(st)); };
+  // Small note: how many people the meals are for (servings can differ per meal).
+  const serv = plan.map((e) => e.s);
+  const lo = Math.min(...serv), hi = Math.max(...serv);
+  const forPeople = lo === hi ? `For ${lo} ${lo === 1 ? 'person' : 'people'}` : `For ${lo}–${hi} people`;
   const avg = (k: 'kcal' | 'prot') => Math.round(macros.reduce((a, m) => a + m[k], 0) / Math.max(1, macros.length));
 
   const savePlan = () => {
@@ -47,7 +51,10 @@ export default function MyMeals() {
     <View style={{ flex: 1, backgroundColor: C.bg }}>
       <TopBar />
       <ScrollView contentContainerStyle={s.main}>
-        <H2>{plan.length ? `My meals (${plan.length})` : 'My meals'}</H2>
+        <View style={{ gap: 2 }}>
+          <H2>{plan.length ? `My meals (${plan.length})` : 'My meals'}</H2>
+          {plan.length > 0 && <Text style={s.forPeople}>{forPeople}</Text>}
+        </View>
 
         {!plan.length && (
           <View style={s.empty}>
@@ -94,12 +101,12 @@ export default function MyMeals() {
         {/* Adding meals: one clear green button, with "pick for me" as a quieter option. */}
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel="Add recipes"
+          accessibilityLabel="Add meals"
           onPress={() => { tap(); router.navigate('/recipes'); }}
           style={({ pressed }) => [s.addBtn, plan.length > 0 && s.addBtnSoft, pressed && { opacity: 0.85 }]}
         >
           <Ionicons name="add" size={22} color={plan.length ? C.leaf : C.leafInk} />
-          <Text style={[s.addBtnText, plan.length > 0 && { color: C.leaf }]}>{plan.length ? 'Add more recipes' : 'Add recipes'}</Text>
+          <Text style={[s.addBtnText, plan.length > 0 && { color: C.leaf }]}>{plan.length ? 'Add more meals' : 'Add meals'}</Text>
         </Pressable>
         <View style={s.pickRow}>
           <Pressable
@@ -144,5 +151,6 @@ const s = StyleSheet.create({
   cook: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: C.leaf, borderRadius: 99, paddingVertical: 9, paddingHorizontal: 16 },
   cookDone: { backgroundColor: C.leafSoft },
   cookText: { fontFamily: F.semibold, fontSize: 15, color: C.leafInk },
+  forPeople: { fontFamily: F.body, fontSize: 13, color: C.muted },
   links: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', columnGap: 8 },
 });
